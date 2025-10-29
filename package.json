@@ -16,6 +16,11 @@
 		"onLanguage:arcaea-aff"
 	],
 	"main": "./client/out/extension",
+	"workspaces": [
+		"client",
+		"json-schema",
+		"server"
+	],
 	"contributes": {
 		"languages": [
 			{
