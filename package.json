@@ -107,6 +107,15 @@
 							"warn",
 							"error"
 						]
+					},
+					"arcaeaFileFormat.diagnoseLanguage": {
+						"description": "Specify the language of diagnose informations",
+						"type": "string",
+						"default": "en",
+						"enum": [
+							"en",
+							"zh"
+						]
 					}
 				}
 			}

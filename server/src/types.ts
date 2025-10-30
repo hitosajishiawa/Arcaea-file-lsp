@@ -1,5 +1,6 @@
 import { CstNodeLocation } from "chevrotain"
 import { DiagnosticSeverity } from "vscode-languageserver";
+import { MultiLangString } from "./multiLang";
 
 export interface WithLocation<T> {
 	data: T,
@@ -83,6 +84,7 @@ export type AFFTrackItem = AFFTapEvent | AFFHoldEvent
 export type AFFNestableItem = AFFTimingEvent | AFFTrackItem | AFFArcEvent | AFFSceneControlEvent | AFFCameraEvent
 export type AFFItem = AFFNestableItem | AFFCameraEvent | AFFTimingGroupEvent
 export type AFFEvent = AFFItem | AFFArctapEvent
+export type AFFContainTiming = AFFFile | AFFTimingGroupEvent
 
 export interface AFFInt {
 	kind: "int",
@@ -171,12 +173,12 @@ export interface AFFFile {
 }
 
 export interface AFFErrorRelatedInfo {
-	message: string,
+	message: MultiLangString,
 	location: CstNodeLocation,
 }
 
 export interface AFFError {
-	message: string,
+	message: MultiLangString,
 	location: CstNodeLocation,
 	severity: DiagnosticSeverity,
 	relatedInfo?: AFFErrorRelatedInfo[],

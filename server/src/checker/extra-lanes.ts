@@ -18,11 +18,17 @@ export const extraLanesChecker: AFFChecker = (file, errors) => {
 				}
 				if (!(lanes[lastEnwidenlaneId]?.enabled ?? false)) {
 					errors.push({
-						message: `The tap item on the ${trackId.data.value} lane should not present when enwidenlanes is disabled`,
+						message: {
+							en: `The tap item on the ${trackId.data.value} lane should not present when enwidenlanes is disabled`,
+							zh: `禁用 enwidenlanes 时 ${trackId.data.value} 号轨道不应该出现 tap`
+						},
 						severity: DiagnosticSeverity.Error,
 						location: trackId.location,
 						relatedInfo: [{
-							message: `The scenecontrol event that disable enwidenlanes`,
+							message: {
+								en: `The scenecontrol event that disable enwidenlanes`,
+								zh: `禁用 enwidenlanes 的 scenecontrol 事件`
+							},
 							location: lanes[lastEnwidenlaneId]?.item?.location ?? file.metadata.data.metaEndLocation,
 						}],
 					})
@@ -40,11 +46,17 @@ export const extraLanesChecker: AFFChecker = (file, errors) => {
 				}
 				if (disabler.length > 0) {
 					errors.push({
-						message: `The hold item on the ${trackId.data.value} lane should not present when enwidenlanes is disabled`,
+						message: {
+							en: `The hold item on the ${trackId.data.value} lane should not present when enwidenlanes is disabled`,
+							zh: `禁用 enwidenlanes 时 ${trackId.data.value} 号轨道不应该出现 hold`
+						},
 						severity: DiagnosticSeverity.Error,
 						location: trackId.location,
 						relatedInfo: disabler.map(lane => ({
-							message: `The scenecontrol event that disable enwidenlanes`,
+							message: {
+								en: `The scenecontrol event that disable enwidenlanes`,
+								zh: `禁用 enwidenlanes 的 scenecontrol 事件`
+							},
 							location: lane?.item?.location ?? file.metadata.data.metaEndLocation,
 						})),
 					})

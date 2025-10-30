@@ -30,11 +30,17 @@ const checkCutByTiming = (tag: string, timingData: TimingData[], start: number, 
 	const cuters = timingData.slice(firstTimingIndex, lastTimingIndex)
 	if (cuters.length > 0) {
 		error.push({
-			message: `The ${tag} item is cut by timing events`,
+			message: {
+				en: `The ${tag} item is cut by timing events`,
+				zh: `${tag} 跨 timing`
+			},
 			severity: DiagnosticSeverity.Information,
 			location,
 			relatedInfo: cuters.map(timing => ({
-				message: `The timing event that cuts the ${tag} item`,
+				message: {
+					en: `The timing event that cuts the ${tag} item`,
+					zh: `所跨 timing`
+				},
 				location: timing.item.location,
 			})),
 		})

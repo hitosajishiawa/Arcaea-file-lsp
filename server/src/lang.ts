@@ -6,6 +6,8 @@ import { affToAST } from "./to-ast"
 import { AFFError } from "./types"
 import { processCheckers } from "./checkers"
 import { TextDocument } from "vscode-languageserver-textdocument"
+import { MultiLangString } from "./multiLang"
+import { diagnoseLanguage } from "./server"
 
 export const checkAFF = (content: TextDocument): lsp.Diagnostic[] => {
 	let errors: lsp.Diagnostic[] = []
@@ -46,21 +48,24 @@ export const checkAFF = (content: TextDocument): lsp.Diagnostic[] => {
 	return errors
 }
 
-const transformAFFError = (e: AFFError, uri: string): lsp.Diagnostic => ({
-	severity: e.severity,
-	message: e.message,
-	range: {
-		start: { line: e.location.startLine - 1, character: e.location.startColumn - 1 },
-		end: { line: e.location.endLine - 1, character: e.location.endColumn },
-	},
-	relatedInformation: e.relatedInfo ? e.relatedInfo.map(info => ({
-		message: info.message,
-		location: {
-			uri: uri,
-			range: {
-				start: { line: info.location.startLine - 1, character: info.location.startColumn - 1 },
-				end: { line: info.location.endLine - 1, character: info.location.endColumn },
-			}
+const transformAFFError = (e: AFFError, uri: string): lsp.Diagnostic => {
+	let lang: keyof MultiLangString = diagnoseLanguage;
+	return {
+		severity: e.severity,
+		message: e.message[lang],
+		range: {
+			start: { line: e.location.startLine - 1, character: e.location.startColumn - 1 },
+			end: { line: e.location.endLine - 1, character: e.location.endColumn },
 		},
-	})) : undefined
-})
+		relatedInformation: e.relatedInfo ? e.relatedInfo.map(info => ({
+			message: info.message[lang],
+			location: {
+				uri: uri,
+				range: {
+					start: { line: info.location.startLine - 1, character: info.location.startColumn - 1 },
+					end: { line: info.location.endLine - 1, character: info.location.endColumn },
+				}
+			},
+		})) : undefined
+	}
+}

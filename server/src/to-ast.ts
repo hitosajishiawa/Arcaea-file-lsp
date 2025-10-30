@@ -29,11 +29,17 @@ class ToASTVisitor extends BaseAffVisitor implements ICstVisitor<AFFError[], any
 				let location = metadata.get(key).data.key.location
 				// error: duplicated entry key
 				errors.push({
-					message: `"${key}" is defined twice in the metadata section`,
+					message: {
+						en: `"${key}" is defined twice in the metadata section`,
+						zh: `"${key}" 在元数据部分重复定义`
+					},
 					location: entry.key.location,
 					severity: DiagnosticSeverity.Error,
 					relatedInfo: [{
-						message: "Previous defination",
+						message: {
+							en: `Previous defination`,
+							zh: `已有定义`
+						},
 						location
 					}]
 				})
@@ -87,7 +93,10 @@ class ToASTVisitor extends BaseAffVisitor implements ICstVisitor<AFFError[], any
 			} else {
 				// error: unknown tag
 				errors.push({
-					message: `Unknown event type "${tag.image}"`,
+					message: {
+						en: `Unknown event type "${tag.image}"`,
+						zh: `未知的事件类型 "${tag.image}"`
+					},
 					location: locationFromToken(tag),
 					severity: DiagnosticSeverity.Error
 				})
@@ -113,7 +122,10 @@ class ToASTVisitor extends BaseAffVisitor implements ICstVisitor<AFFError[], any
 			if (event.kind === "arctap") {
 				//error: arctap should not be items
 				errors.push({
-					message: `Event with type "${event.kind}" should not be used as an item`,
+					message: {
+						en: `Event with type arctap should not be used as an item`,
+						zh: `arctap 定义必须依赖于 arc`
+					},
 					location: event.tagLocation,
 					severity: DiagnosticSeverity.Error
 				})
@@ -152,7 +164,10 @@ const rejectSubevent = (errors: AFFError[], kind: string, subevents: WithLocatio
 	if (subevents !== null) {
 		// error: unexpected subevent
 		errors.push({
-			message: `Event with type "${kind}" should not have subevents`,
+			message: {
+				en: `Event with type "${kind}" should not have subevents`,
+				zh: `"${kind}" 事件不能有子事件`
+			},
 			location: subeventsLocation,
 			severity: DiagnosticSeverity.Error,
 		})
@@ -163,7 +178,10 @@ const rejectSegment = (errors: AFFError[], kind: string, segment: WithLocation<A
 	if (segment !== null) {
 		// error: unexpected subevent
 		errors.push({
-			message: `Event with type "${kind}" should not have segment`,
+			message: {
+				en: `Event with type "${kind}" should not have segment`,
+				zh: `"${kind}" 事件不能有？？`
+			},
 			location: segmentLocation,
 			severity: DiagnosticSeverity.Error,
 		})
@@ -174,7 +192,10 @@ const ensureValuesCount = (errors: AFFError[], kind: string, count: number, valu
 	if (values.length < count) {
 		// error: value count mismatch
 		errors.push({
-			message: `Event with type "${kind}" should have at least ${count} field(s) instead of ${values.length} field(s)`,
+			message: {
+				en: `Event with type "${kind}" should have at least ${count} field(s) instead of ${values.length} field(s)`,
+				zh: `"${kind}" 事件应有至少 ${count} 个字段，实际有 ${values.length} 个字段`
+			},
 			location: valuesLocation,
 			severity: DiagnosticSeverity.Error,
 		})
@@ -187,7 +208,10 @@ const limitValuesCount = (errors: AFFError[], kind: string, count: number, value
 	if (values.length > count) {
 		// error: value count mismatch
 		errors.push({
-			message: `Event with type "${kind}" should have at most ${count} field(s) instead of ${values.length} field(s)`,
+			message: {
+				en: `Event with type "${kind}" should have at most ${count} field(s) instead of ${values.length} field(s)`,
+				zh: `"${kind}" 事件应有至多 ${count} 个字段，实际有 ${values.length} 个字段`
+			},
 			location: valuesLocation,
 			severity: DiagnosticSeverity.Error,
 		})
@@ -200,7 +224,10 @@ const checkValuesCount = (errors: AFFError[], kind: string, count: number, value
 	if (values.length !== count) {
 		// error: value count mismatch
 		errors.push({
-			message: `Event with type "${kind}" should have ${count} field(s) instead of ${values.length} field(s)`,
+			message: {
+				en: `Event with type "${kind}" should have ${count} field(s) instead of ${values.length} field(s)`,
+				zh: `"${kind}" 事件应有 ${count} 个字段，而非 ${values.length} 个字段`
+			},
 			location: valuesLocation,
 			severity: DiagnosticSeverity.Error,
 		})
@@ -221,7 +248,10 @@ const checkValueType = <T extends keyof AFFValues>(
 	if (value.data.kind !== kind) {
 		// error: value type mismatch
 		errors.push({
-			message: `The value in the "${fieldName}" field of event with type "${eventKind}" should be "${kind}" instead of "${value.data.kind}"`,
+			message: {
+				en: `The value in the "${fieldName}" field of event with type "${eventKind}" should be "${kind}" instead of "${value.data.kind}"`,
+				zh: `"${eventKind}" 事件的 "${fieldName}" 字段的值应是 "${kind}" 类型，而非 "${value.data.kind}" 类型`
+			},
 			location: values[id].location,
 			severity: DiagnosticSeverity.Error,
 		})
@@ -479,7 +509,10 @@ const transformArcSubevents = (
 	for (const { location, data: event } of subevents) {
 		if (event.kind !== "arctap") {
 			errors.push({
-				message: `Type of subevent of event with type "arc" should be "arctap" instead of "${event.kind}"`,
+				message: {
+					en: `Type of subevent of event with type "arc" should be "arctap" instead of "${event.kind}"`,
+					zh: `arc 的子事件类型应为 "arctap"，而非 "${event.kind}"`
+				},
 				location: location,
 				severity: DiagnosticSeverity.Error,
 			})
@@ -499,7 +532,10 @@ const selectNestedItems = (
 	for (const { location, data: item } of segment) {
 		if (item.kind === "timinggroup") {
 			errors.push({
-				message: `Item of type "${item.kind}" cannot be nested in timinggroup`,
+				message: {
+					en: `Item of type "${item.kind}" cannot be nested in timinggroup`,
+					zh: `"${item.kind}" 项不能嵌套在 timinggroup 中`
+				},
 				location: location,
 				severity: DiagnosticSeverity.Error,
 			})
@@ -520,7 +556,10 @@ const parseValue = {
 			}
 			if (intValue < 0 || intValue > 5) {
 				errors.push({
-					message: `The value in the "${fieldName}" field of event with type "${eventKind}" should be one of ${[...affTrackIds.values()].join()}`,
+					message: {
+						en: `The value in the "${fieldName}" field of event with type "${eventKind}" should be one of ${[...affTrackIds.values()].join()}`,
+						zh: `"${eventKind}" 事件的 "${fieldName}" 字段的值应是 ${[...affTrackIds.values()].join()} 之一`
+					},
 					location,
 					severity: DiagnosticSeverity.Error,
 				})
@@ -540,7 +579,10 @@ const parseValue = {
 			}
 			if (intValue < 0 || intValue > 3) {
 				errors.push({
-					message: `The value in the "${fieldName}" field of event with type "${eventKind}" should be one of ${[...affColorIds.values()].join()}`,
+					message: {
+						en: `The value in the "${fieldName}" field of event with type "${eventKind}" should be one of ${[...affColorIds.values()].join()}`,
+						zh: `"${eventKind}" 事件的 "${fieldName}" 字段的值应是 ${[...affColorIds.values()].join()} 之一`
+					},
 					location,
 					severity: DiagnosticSeverity.Error,
 				})
@@ -557,7 +599,10 @@ const parseValue = {
 			const wordValue = data.value
 			if (!affArcCurveKinds.has(wordValue)) {
 				errors.push({
-					message: `The value in the "${fieldName}" field of event with type "${eventKind}" should be one of ${[...affArcCurveKinds.values()].join()}`,
+					message: {
+						en: `The value in the "${fieldName}" field of event with type "${eventKind}" should be one of ${[...affArcCurveKinds.values()].join()}`,
+						zh: `"${eventKind}" 事件的 "${fieldName}" 字段的值应是 ${[...affArcCurveKinds.values()].join()} 之一`
+					},
 					location,
 					severity: DiagnosticSeverity.Error,
 				})
@@ -583,7 +628,10 @@ const parseValue = {
 			const wordValue = data.value
 			if (!affArcLineKinds.has(wordValue)) {
 				errors.push({
-					message: `The value in the "${fieldName}" field of event with type "${eventKind}" should be one of ${[...affArcLineKinds.values()].join()}`,
+					message: {
+						en: `The value in the "${fieldName}" field of event with type "${eventKind}" should be one of ${[...affArcLineKinds.values()].join()}`,
+						zh: `"${eventKind}" 事件的 "${fieldName}" 字段的值应是 ${[...affArcLineKinds.values()].join()} 之一`
+					},
 					location,
 					severity: DiagnosticSeverity.Error,
 				})
@@ -600,7 +648,10 @@ const parseValue = {
 			const wordValue = data.value
 			if (!affCameraKinds.has(wordValue)) {
 				errors.push({
-					message: `The value in the "${fieldName}" field of event with type "${eventKind}" should be one of ${[...affCameraKinds.values()].join()}`,
+					message: {
+						en: `The value in the "${fieldName}" field of event with type "${eventKind}" should be one of ${[...affCameraKinds.values()].join()}`,
+						zh: `"${eventKind}" 事件的 "${fieldName}" 字段的值应是 ${[...affCameraKinds.values()].join()} 之一`
+					},
 					location,
 					severity: DiagnosticSeverity.Error,
 				})

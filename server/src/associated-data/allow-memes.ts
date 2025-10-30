@@ -18,11 +18,15 @@ const genAllowMemesResult = (file: AFFFile): AllowMemesResult => {
 	const enableAllowMemesWithItem = (item: WithLocation<AFFItem>): AllowMemesResult => ({
 		enable: true,
 		errors: [{
-			message: "Allow memes mode is turned on since memes events present, some checks will be skipped",
+			message: {en: `Allow memes mode is turned on since memes events present, some checks will be skipped`,
+				zh: `一旦 memes 事件存在，Allow memes 模式即启用，将不再进行某些检查`
+			},
 			severity: DiagnosticSeverity.Hint,
 			location: file.metadata.data.metaEndLocation,
 			relatedInfo: [{
-				message: `The event that triggered the allow memes mode`,
+				message: {en: `The event that triggered the allow memes mode`,
+					zh: `此事件触发启用了 Allow memes 模式`
+				},
 				location: item.location
 			}]
 		}]

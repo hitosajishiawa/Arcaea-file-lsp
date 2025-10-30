@@ -17,11 +17,17 @@ export const overlapChecker: AFFChecker = (file, error) => {
 					const timestamp = arctap.data.time.data.value
 					if (timestamps.has(timestamp)) {
 						error.push({
-							message: `The arctap is duplicated with previous arctap`,
+							message: {
+								en: `The arctap is duplicated with previous arctap`,
+								zh: `此 arctap 重复定义`
+							},
 							severity: DiagnosticSeverity.Error,
 							location: arctap.location,
 							relatedInfo: [{
-								message: `Previous arctap`,
+								message: {
+									en: `Previous arctap`,
+									zh: `已有 arctap`
+								},
 								location: timestamps.get(timestamp)
 							}]
 						})
@@ -102,11 +108,17 @@ const checkTrackOverlap = (error: AFFError[], items: WithLocation<AFFTrackItem>[
 	const getStart = (item: WithLocation<AFFTrackItem>) => item.data.kind === "tap" ? item.data.time.data.value : item.data.start.data.value
 	const report = (location: CstNodeLocation, lastLocation: CstNodeLocation) => {
 		error.push({
-			message: `The track item is overlapped with a previous track item`,
+			message: {
+				en: `The track item is overlapped with a previous track item`,
+				zh: `此音轨与已有音轨重叠`
+			},
 			severity: DiagnosticSeverity.Error,
 			location,
 			relatedInfo: [{
-				message: `The previous track item`,
+				message: {
+					en: `The previous track item`,
+					zh: `已有音轨`
+				},
 				location: lastLocation
 			}]
 		})
@@ -145,11 +157,17 @@ const checkTrackOverlap = (error: AFFError[], items: WithLocation<AFFTrackItem>[
 const checkCameraOverlap = (error: AFFError[], cameras: WithLocation<AFFCameraEvent>[]) => {
 	const report = (location: CstNodeLocation, lastLocation: CstNodeLocation) => {
 		error.push({
-			message: `The camera item is overlapped with a previous camera item`,
+			message: {
+				en: `The camera item is overlapped with a previous camera item`,
+				zh: `此 camera 与已有 camera 重叠`
+			},
 			severity: DiagnosticSeverity.Warning,
 			location,
 			relatedInfo: [{
-				message: `The previous camera item`,
+				message: {
+					en: `The previous camera item`,
+					zh: `已有 camera`
+				},
 				location: lastLocation
 			}]
 		})
@@ -173,11 +191,17 @@ const checkCameraOverlap = (error: AFFError[], cameras: WithLocation<AFFCameraEv
 const checkScenecontrolOverlap = (error: AFFError[], scenecontrols: WithLocation<AFFSceneControlEvent>[], kind: string, timeScale: number) => {
 	const report = (location: CstNodeLocation, lastLocation: CstNodeLocation) => {
 		error.push({
-			message: `The scenecontrol item with kind "${kind}" is overlapped with a previous scenecontrol item with kind "${kind}"`,
+			message: {
+				en: `The scenecontrol item with kind "${kind}" is overlapped with a previous scenecontrol item with kind "${kind}"`,
+				zh: `此 scenecontrol 与已有 scenecontrol 重叠`
+			},
 			severity: DiagnosticSeverity.Warning,
 			location,
 			relatedInfo: [{
-				message: `The previous scenecontrol item`,
+				message: {
+					en: `The previous scenecontrol item`,
+					zh: `已有 scenecontrol`
+				},
 				location: lastLocation
 			}]
 		})

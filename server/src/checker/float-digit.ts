@@ -42,7 +42,9 @@ const checkItem = ({ data, location }: WithLocation<AFFItem>, errors: AFFError[]
 const checkFloat = (float: WithLocation<AFFFloat>, errors: AFFError[]) => {
 	if (float.data.digit !== 2) {
 		errors.push({
-			message: `Float values should have exact 2 digits in its fractional part`,
+			message: {en: `Float values should have exact 2 digits in its fractional part`,
+				zh: `浮点值应有且仅有 2 位小数`
+			},
 			severity: DiagnosticSeverity.Warning,
 			location: float.location,
 		})

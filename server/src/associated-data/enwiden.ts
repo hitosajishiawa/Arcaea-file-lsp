@@ -58,11 +58,17 @@ const genEnwidenResult = (file: AFFFile): EnwidenResult => {
 			if (enabled === data.enabled) {
 				const enabledString = enabled ? "enabled" : "disabled"
 				errors.push({
-					message: `The ${type} state is already ${enabledString}, you can't make it ${enabledString} again`,
+					message: {
+						en: `The ${type} state is already ${enabledString}, you can't make it ${enabledString} again`,
+						zh: `${type} 上次已声明为 ${enabledString} ，不可再次声明为 ${enabledString}`
+					},
 					severity: DiagnosticSeverity.Warning,
 					location: data.item.data.values.data[1].location,
 					relatedInfo: [{
-						message: `Last time ${type} state becomes ${enabledString}`,
+						message: {
+							en: `Last time ${type} state becomes ${enabledString}`,
+							zh: `最近声明 ${type} 于此处，此时已为 ${enabledString}`
+						},
 						location: filteredData.length > 0 ? filteredData[filteredData.length - 1].item.location : file.metadata.data.metaEndLocation
 					}]
 				})

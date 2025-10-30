@@ -2,6 +2,7 @@ import * as lsp from "vscode-languageserver/node"
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { checkAFF } from "./lang"
 import { DiagnosticSeverity, TextDocumentSyncKind } from "vscode-languageserver"
+import { MultiLangString } from "./multiLang"
 
 let connection = lsp.createConnection()
 
@@ -17,7 +18,9 @@ connection.onInitialized(() => {
 
 connection.onDidChangeConfiguration(change => {
 	console.log(`change config`)
-	documents.all().forEach(validateTextDocument);
+	let allDoc = documents.all();
+	allDoc.forEach(validateTextDocument);
+	allDoc.forEach(refreshDiagnoseLanguage);
 })
 
 documents.onDidChangeContent((change) => {
@@ -47,6 +50,12 @@ const validateTextDocument = async (textDocument: TextDocument) => {
 	connection.sendDiagnostics({
 		uri: textDocument.uri, diagnostics: errors
 	})
+}
+
+export var diagnoseLanguage: keyof MultiLangString = 'en';
+
+const refreshDiagnoseLanguage = async (textDocument: TextDocument) => {
+	diagnoseLanguage = (await getSetting(textDocument.uri)).diagnoseLanguage;
 }
 
 documents.listen(connection)

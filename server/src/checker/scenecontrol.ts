@@ -37,7 +37,10 @@ const checkScenecontrol = (kind: WithLocation<AFFSceneControlKind>, values: With
 		return
 	}
 	error.push({
-		message: `Scenecontrol event with type "${kind.data.value}" is not known by us, so the type of additional values is not checked`,
+		message: {
+			en: `Scenecontrol event with type "${kind.data.value}" is not known by us, so the type of additional values is not checked`,
+			zh: `未知的 scenecontrol 类型 "${kind.data.value}" ，因此不检查额外参数类型`
+		},
 		location: kind.location,
 		severity: DiagnosticSeverity.Warning,
 	})
@@ -47,7 +50,10 @@ const checkValuesCount = (errors: AFFError[], kind: string, count: number, value
 	if (values.length !== count) {
 		// error: value count mismatch
 		errors.push({
-			message: `Scenecontrol event with type "${kind}" should have ${count} additional value(s) instead of ${values.length} additional value(s)`,
+			message: {
+				en: `Scenecontrol event with type "${kind}" should have ${count} additional value(s) instead of ${values.length} additional value(s)`,
+				zh: `类型为 "${kind}" 的 scenecontrol 事件应当有 ${count} 个额外参数，而实际上有 ${values.length} 个额外参数`
+			},
 			location: valuesLocation,
 			severity: DiagnosticSeverity.Error,
 		})
@@ -68,7 +74,10 @@ const checkValueType = <T extends keyof AFFValues>(
 	if (value.data.kind !== kind) {
 		// error: value type mismatch
 		errors.push({
-			message: `The value in the "${fieldName}" field of scenecontrol event with type "${eventKind}" should be "${kind}" instead of "${value.data.kind}"`,
+			message: {
+				en: `The value in the "${fieldName}" field of scenecontrol event with type "${eventKind}" should be "${kind}" instead of "${value.data.kind}"`,
+				zh: `类型为 "${eventKind}" 的 scenecontrol 事件的 "${fieldName}" 字段应当为 "${kind}" 类型，而非 "${value.data.kind}" 类型`
+			},
 			location: values[id].location,
 			severity: DiagnosticSeverity.Error,
 		})
