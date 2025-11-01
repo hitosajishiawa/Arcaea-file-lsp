@@ -1,6 +1,7 @@
 import { CstNodeLocation } from "chevrotain"
 import { DiagnosticSeverity } from "vscode-languageserver";
 import { MultiLangString } from "./multiLang";
+import { Difficulty } from "./difficulty";
 
 export interface WithLocation<T> {
 	data: T,
@@ -184,4 +185,4 @@ export interface AFFError {
 	relatedInfo?: AFFErrorRelatedInfo[],
 }
 
-export type AFFChecker = (file: AFFFile, errors: AFFError[]) => void
+export type AFFChecker = (file: AFFFile, errors: AFFError[], difficulty: Difficulty) => void

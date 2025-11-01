@@ -7,10 +7,12 @@ import { AFFError } from "./types"
 import { processCheckers } from "./checkers"
 import { TextDocument } from "vscode-languageserver-textdocument"
 import { MultiLangString } from "./multiLang"
-import { diagnoseLanguage } from "./server"
+import { settings } from "./server"
+import { getDifficulty } from "./difficulty"
 
 export const checkAFF = (content: TextDocument): lsp.Diagnostic[] => {
 	let errors: lsp.Diagnostic[] = []
+	let difficulty = getDifficulty(content.uri)
 	const text = content.getText()
 	const lexingResult = AFFLexer.tokenize(text)
 	if (lexingResult.errors.length > 0) {
@@ -42,14 +44,14 @@ export const checkAFF = (content: TextDocument): lsp.Diagnostic[] => {
 	} else {
 		const astResult = affToAST(parsingResult)
 		errors = errors.concat(astResult.errors.map(e => transformAFFError(e, content.uri)))
-		const checkerErrors = processCheckers(astResult.ast)
+		const checkerErrors = processCheckers(astResult.ast, difficulty)
 		errors = errors.concat(checkerErrors.map(e => transformAFFError(e, content.uri)))
 	}
 	return errors
 }
 
 const transformAFFError = (e: AFFError, uri: string): lsp.Diagnostic => {
-	let lang: keyof MultiLangString = diagnoseLanguage;
+	let lang: keyof MultiLangString = settings.diagnoseLanguage;
 	return {
 		severity: e.severity,
 		message: e.message[lang],

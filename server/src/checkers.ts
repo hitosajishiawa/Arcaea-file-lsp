@@ -11,6 +11,7 @@ import { AFFFile, AFFError } from "./types"
 import { timinggroupAttributeChecker } from "./checker/timinggroup-attribute"
 import { enwidenChecker } from "./checker/enwiden"
 import { extraLanesChecker } from "./checker/extra-lanes"
+import { Difficulty } from "./difficulty"
 
 const checkers = [
 	allowMemesChecker,
@@ -27,10 +28,10 @@ const checkers = [
 	timinggroupAttributeChecker,
 ]
 
-export const processCheckers = (file: AFFFile): AFFError[] => {
+export const processCheckers = (file: AFFFile, difficulty: Difficulty): AFFError[] => {
 	let errors: AFFError[] = []
 	for (const checker of checkers) {
-		checker(file, errors)
+		checker(file, errors, difficulty)
 	}
 	return errors
 }
