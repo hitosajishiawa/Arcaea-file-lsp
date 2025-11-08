@@ -180,7 +180,7 @@ const rejectSegment = (errors: AFFError[], kind: string, segment: WithLocation<A
 		errors.push({
 			message: {
 				en: `Event with type "${kind}" should not have segment`,
-				zh: `"${kind}" 事件不能有？？`
+				zh: `"${kind}" 事件不能有片段`
 			},
 			location: segmentLocation,
 			severity: DiagnosticSeverity.Error,
